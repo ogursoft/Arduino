@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="bootstrap.min.css">
+
+    <title>Погодная станция на esp8266 и bme280</title>
+  </head>
+  <body>
+  <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+<h3>Погодная станция на esp8266 и bme280 (ChipId: <span id="chipid"></span>)</h3>
+Температура:
+<span id="temp" style="font-size: 1.5em;"></span> °С</br>
+Влажность:
+<span id="humidity" style="font-size: 1.5em;"></span> %</br>
+Давление:
+<span id="pressure" style="font-size: 1.5em;"></span> мм.рт.ст.</br>
+Время работы:
+<span id="uptime"></span></br>
+Дата время:
+<span id="currtime"></span></br> 
+
+Последнее обновление:
+	<span id="ut"></span> секунд назад.
+	<span id="status"></span></br>
+
+
+<a href="wifi.htm">Настройка WiFi &raquo;</a>
+</div>
+</div>
+</div>
+
+<script>
+	function g(i) { return document.getElementById(i) };
+	var xhttp, updateTime;
+
+	function transmit(f) {
+		if (!xhttp) { //prevent simultaneous requests
+			g("status").innerHTML = " обновление...";
+			xhttp = new XMLHttpRequest();
+			xhttp.open("POST", "/api");
+			xhttp.send(f ? (new FormData(f)) : "");
+			xhttp.onreadystatechange = function () {
+				if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
+					var data = JSON.parse(xhttp.responseText);
+					g("temp").innerHTML = data.temp;
+					g("humidity").innerHTML = data.humidity;
+					g("pressure").innerHTML = data.pressure;
+					g("uptime").innerHTML = data.uptime;
+					g("currtime").innerHTML = data.currtime;
+					g("chipid").innerHTML = data.chipid;
+					xhttp = null;
+					g("status").innerHTML = "";
+					updateTime = 0;
+				}
+			}
+		}
+		return false; //prevent form redirect
+	}
+	transmit();
+	setInterval(function () { g("ut").innerHTML = ++updateTime; }, 1000);
+	setInterval(transmit, 5000); //autoupdate display every 5s
+</script>
+<script src="bootstrap.min.js"></script>
+<script src="jquery.min.js"></script>
+</body>
+</html>
