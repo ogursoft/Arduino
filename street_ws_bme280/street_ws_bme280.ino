@@ -265,7 +265,7 @@ void sendNTPpacket(IPAddress &address)
 // PubSubClient functions
 boolean reconnect() {
   DEBUG_PRINT("Mqtt connecting....");
-  if (client.connect(device_name.c_str(), "mqttuser", "terminat")) {
+  if (client.connect(device_name.c_str(), "mqttuser", "mqttpassword")) {
     // Once connected, publish an announcement...
     DEBUG_PRINT("Mqtt connected");
     client.publish(mqtt_topic.c_str(), "ON");
