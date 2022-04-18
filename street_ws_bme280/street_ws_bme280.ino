@@ -43,7 +43,7 @@ float temp;
 float humidity;
 float pressure;
 unsigned int localPort = 8888;  // local port to listen for UDP packets
-const char* mqtt_server = "orangepi.lan";
+const char* mqtt_server = "example.lan";
 String device_name;
 String chipId;
 String mqtt_topic = "home/" + device_name;
